@@ -24,6 +24,7 @@ let greenIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
+//製作紅色icon
 let redIcon = new L.Icon({
   iconUrl:
     'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -61,7 +62,7 @@ xhr.send(null);
 xhr.onload = function () {
   let data = JSON.parse(xhr.responseText).features;
   for (let i = 0; data.length > i; i++) {
-    var iconColor;
+    let iconColor;
     if (data[i].properties.mask_adult == 0) {
       iconColor = redIcon;
     } else {
@@ -86,3 +87,139 @@ xhr.onload = function () {
   }
   map.addLayer(markers);
 };
+//以上map
+
+let date = new Date();
+let day = date.getDay();
+//星期幾
+function dayChinese(day) {
+  let today = document.querySelector('.today span');
+  switch (day) {
+    case 1:
+      today.textContent = '一';
+      break;
+    case 2:
+      today.textContent = '二';
+      break;
+    case 3:
+      today.textContent = '三';
+      break;
+    case 4:
+      today.textContent = '四';
+      break;
+    case 5:
+      today.textContent = '五';
+      break;
+    case 6:
+      today.textContent = '六';
+      break;
+    case 7:
+      today.textContent = '日';
+      break;
+  }
+}
+
+//日期
+function thisDate() {
+  let thisDate = document.getElementById('thisDate');
+  thisDate.textContent =
+    date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+}
+
+//可購買日
+function canBuy() {
+  let canBuy = document.querySelector('.canBuy');
+  if (day === 1 || day === 3 || day === 5) {
+    canBuy.innerHTML = `<p>身分證末碼為<span>1,3,5,7,9</span>可購買</p>`;
+  } else if (day === 2 || day === 4 || day === 6) {
+    canBuy.innerHTML = `<p>身分證末碼為<span>2,4,6,8,0</span>可購買</p>`;
+  } else {
+    canBuy.innerHTML = `<p>今日皆可購買</p>`;
+  }
+}
+
+//現在時間
+function currentTime() {
+  document.getElementById('currentTime').textContent = moment().format('LTS');
+  setTimeout('currentTime()', 1000); //每秒呼叫一次功能
+}
+
+//選擇城市
+function selectCountry(e) {
+  let select = e.target.value;
+  let country = document.getElementById('country');
+  let pharmacy = document.querySelector('.pharmacy');
+  let data = JSON.parse(xhr.responseText).features;
+  // console.log(data);
+  let str = '';
+  let townOption = '';
+  let town = document.getElementById('town');
+  for (let i = 0; i < data.length; i++) {
+    // let content = `<li>${data[i].properties.name}</li>`
+    let townContent = `<option>${data[i].properties.town}</option>;`;
+    if (data[i].properties.county === select) {
+      // console.log(data[i].properties.town);
+      townOption += townContent;
+    }
+  }
+  town.innerHTML = townOption;
+$(function () {
+  $('#town').focus(function () {
+    $('select option').each(function () {
+      text = $(this).text();
+      if ($('select option:contains(' + text + ')').length > 1)
+        $('select option:contains(' + text + '):gt(0)').remove();
+    });
+  });
+});
+  // pharmacy.innerHTML = str;
+}
+country.addEventListener('change', selectCountry);
+
+function selectTown(e){
+  let data = JSON.parse(xhr.responseText).features;
+  let pharmacy = document.querySelector('.pharmacy');
+  
+  let select = e.target.value;
+  let str = '';
+  for (let i = 0; i < data.length; i++) {
+    let content = `<li>${data[i].properties.name}</li>`;
+    if (select === data[i].properties.town) {
+      str += content;
+    }
+  }
+  pharmacy.innerHTML = str;
+}
+town.addEventListener('change', selectTown);
+
+// let btn = document.getElementById('btn');
+// function clickSearch(e){
+//   let search = document.getElementById('search').value;
+//   let data = JSON.parse(xhr.responseText).features;
+//   let str ='';
+//   for(let i=0; i<data.length; i++) {
+//     let content = `<li>${data[i].properties.name}</li>`;
+
+//     if( search == data[i].properties.name || 
+//         search == data[i].properties.address ||
+//         search == data[i].properties.country ||
+//         search == data[i].properties.town ||
+//         search == data[i].properties.cunli
+//         ){
+//           str += content;
+//         }
+//   }
+//   pharmacy.innerHTML = str;
+// }
+// btn.addEventListener('click', clickSearch);
+
+
+
+//預設執行
+function init() {
+  dayChinese(day);
+  thisDate();
+  canBuy();
+  currentTime();
+}
+init();

@@ -33,9 +33,31 @@
     ></script>
     <!-- marker插件JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    <!-- Moment.JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
     <title>口罩地圖</title>
   </head>
   <body>
+    <div class="container">
+      <p class="today">星期<span></span></p>
+      <p id="thisDate"></p>
+      <div class="canBuy"><p>身分證末碼為<span>2,4,6,8,0</span>可購買</p></div>
+      <p id="currentTime"></p>
+      <select name="" id="country">
+        <option value="臺北市">臺北市</option>
+        <option value="新北市">新北市</option>
+      </select>
+      <select name="" id="town">
+        <option value="選擇區域">選擇區域</option>
+      </select>
+      <br>
+      <input id="search" type="text" placeholder="搜尋區域,地址,藥局">
+      <button id="btn">搜尋</button>
+      <div class="pharmacy">
+        <ul>
+        </ul>
+      </div>
+    </div>
     <div id="map"></div>
     <!-- JS -->
     <script src="js/jquery-3.6.0.min.js"></script>
