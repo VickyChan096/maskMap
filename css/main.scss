@@ -1,7 +1,5 @@
-@import "variable"; //字級、顏色、速度
 @import "reset"; //Reset、初始設定
 @import "mixin"; //Flex、@media
-@import "common"; //此專案通用、toTop、按鈕
 
 html,
 body {
@@ -59,12 +57,153 @@ body {
   line-height: 30px;
 }
 
-.container{
+.container {
   position: absolute;
   right: 0;
   top: 0;
   z-index: 11;
+  overflow-y: scroll;
   width: 300px;
-  height: 300px;
+  height: 100vh;
   background-color: #fff;
+}
+
+.info {
+  @include disFlex($jc: space-around);
+  flex-wrap: wrap;
+  position: fixed;
+  width: 300px;
+  padding: 5px;
+  text-align: center;
+  color: #fff;
+  background-color: #73C0D8;
+
+  &__today {
+    font-size: 29px;
+  }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+
+    &__id {
+      font-size: 8px;
+
+      span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #FFF126;
+      }
+    }
+  }
+
+  &__selectArea {
+    margin: 10px 0;
+    width: 100%;
+
+    select {
+      margin: 0 2px;
+      padding: 5px;
+      width: 125px;
+      font-size: 16px;
+      border: 0;
+      border-radius: 2px;
+    }
+  }
+
+  &__searchBar {
+    margin: 0 0 10px 0;
+
+    input {
+      padding: 5px;
+      margin: 0 2px;
+      width: 200px;
+      font-size: 16px;
+      border: 0;
+      border-radius: 2px;
+    }
+
+    button {
+      padding: 2.5px;
+      margin: 0 2px;
+      width: 50px;
+      font-size: 16px;
+      border: 0;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.1s linear;
+      ;
+
+      &:hover {
+        filter: brightness(120%);
+      }
+    }
+  }
+}
+
+.main {
+  color: #000;
+  padding-top: 146.5px;
+}
+
+.card {
+  padding: 10px;
+  color: #666666;
+  font-size: 14px;
+  border-bottom: 1px solid #00000029;
+
+  &__name {
+    margin-bottom: 5px;
+    color: #000;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  &__add {
+    margin-bottom: 5px;
+  }
+
+  &__tel {
+    margin-bottom: 5px;
+  }
+
+  &__open {
+    margin-bottom: 5px;
+  }
+
+  &__maskNum {
+    @include disFlex($jc: space-around);
+
+    div {
+      @include disFlex($jc: space-around);
+      padding: 5px;
+      width: 130px;
+      height: 25px;
+      color: #fff;
+      border-radius: 25px;
+    }
+  }
+}
+
+.bgc-none {
+  background-color: #A5A5A5;
+}
+
+.bgc-child {
+  background-color: #FFA573;
+}
+
+.bgc-adult {
+  background-color: #73C0D8;
+}
+
+.time {
+  position: fixed;
+  bottom: 0;
+  padding: 5px;
+  width: 300px;
+  text-align: center;
+  color: #fff;
+  background-color: #73C0D8;
 }

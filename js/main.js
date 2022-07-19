@@ -1,19 +1,19 @@
-//L是Leaflet框架的名字，有可能會與其他框架衝突
-//map函式('設定在#map',{先定位在center這個座標,zoom定位在16})
 let map = L.map('map', {
+  //L是Leaflet框架的名字，有可能會與其他框架衝突
+  //map函式('設定在#map',{先定位在center這個座標,zoom定位在16})
   center: [25.00144398527068, 121.51330907919525],
-  zoom: 16,
+  zoom: 17,
 });
 
-//OSM的圖磚資料.addTo加入到(map裡面去)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  //右下角資訊
+  //OSM的圖磚資料.addTo加入到(map裡面去)
   attribution:
+    //右下角資訊
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-//製作綠色icon
 let greenIcon = new L.Icon({
+  //製作綠色icon
   iconUrl:
     'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl:
@@ -24,8 +24,8 @@ let greenIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-//製作紅色icon
 let redIcon = new L.Icon({
+  //製作紅色icon
   iconUrl:
     'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl:
@@ -36,34 +36,21 @@ let redIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-//新增一個marker圖層，專門用來放群組
-let markers = new L.MarkerClusterGroup().addTo(map);
+let markers = new L.MarkerClusterGroup().addTo(map); //新增一個marker圖層，專門用來放群組
 
-// //加上marker，設定它的座標
-// L.marker([25.00144398527068, 121.51330907919525], { icon: greenIcon })
-//   //將這個座標放到對應的地圖裡
-//   .addTo(map)
-//   //針對這個marker加上html進去
-//   .bindPopup('<h1>四號公園</h1>')
-//   //預設開啟
-//   .openPopup();
-
-//開啟一個網路請求
 let xhr = new XMLHttpRequest();
-//準備跟伺服器要資料
+//開啟網路請求
 xhr.open(
   'get',
   'https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json',
   true
 );
-//執行要資料的動作
 xhr.send(null);
-//當資料回傳好時，下面語法自動觸發
 xhr.onload = function () {
   let data = JSON.parse(xhr.responseText).features;
   for (let i = 0; data.length > i; i++) {
     let iconColor;
-    if (data[i].properties.mask_adult == 0) {
+    if (data[i].properties.mask_adult === 0) {
       iconColor = redIcon;
     } else {
       iconColor = greenIcon;
@@ -81,18 +68,15 @@ xhr.onload = function () {
           '</p>'
       )
     );
-    // add more markers here...
-    // L.marker().addTo(map)
-    //   )
   }
   map.addLayer(markers);
 };
-//以上map
 
 let date = new Date();
 let day = date.getDay();
-//星期幾
-function dayChinese(day) {
+
+//星期轉成中文
+function changeChinese(day) {
   let today = document.querySelector('.today span');
   switch (day) {
     case 1:
@@ -119,16 +103,16 @@ function dayChinese(day) {
   }
 }
 
-//日期
+//今日日期
 function thisDate() {
   let thisDate = document.getElementById('thisDate');
   thisDate.textContent =
     date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 }
 
-//可購買日
+//可購買者
 function canBuy() {
-  let canBuy = document.querySelector('.canBuy');
+  let canBuy = document.getElementById('canBuy');
   if (day === 1 || day === 3 || day === 5) {
     canBuy.innerHTML = `<p>身分證末碼為<span>1,3,5,7,9</span>可購買</p>`;
   } else if (day === 2 || day === 4 || day === 6) {
@@ -146,44 +130,101 @@ function currentTime() {
 
 //選擇城市
 function selectCountry(e) {
-  let select = e.target.value;
-  let country = document.getElementById('country');
-  let pharmacy = document.querySelector('.pharmacy');
+  markers.clearLayers();
+
   let data = JSON.parse(xhr.responseText).features;
-  // console.log(data);
-  let str = '';
-  let townOption = '';
+  let select = e.target.value;
+  let pharmacy = document.querySelector('.pharmacy');
   let town = document.getElementById('town');
+  let townOption = '';
+  let str = '';
+
   for (let i = 0; i < data.length; i++) {
-    // let content = `<li>${data[i].properties.name}</li>`
+    let content = `
+          <li class="card">
+            <h3 class="card__name">${data[i].properties.name}</h2>
+            <p class="card__add">${data[i].properties.address}</p>
+            <p class="card__tel">${data[i].properties.phone}</p>
+            <p class="card__open">${data[i].properties.note}</p>
+            <div class="card__maskNum">
+              <div class="card__maskNum__adult bgc-adult">
+                <p>成人口罩</p>
+                <p>${data[i].properties.mask_adult}</p>
+              </div>
+              <div class="card__maskNum__child bgc-child">
+                <p>兒童口罩</p>
+                <p>${data[i].properties.mask_child}</p>
+              </div>
+            </div>
+          </li>
+    `;
     let townContent = `<option>${data[i].properties.town}</option>;`;
     if (data[i].properties.county === select) {
-      // console.log(data[i].properties.town);
+      let iconColor;
+      if (data[i].properties.mask_adult === 0) {
+        iconColor = redIcon;
+      } else {
+        iconColor = greenIcon;
+      }
+      markers.addLayer(
+        L.marker(
+          [data[i].geometry.coordinates[1], data[i].geometry.coordinates[0]],
+          { icon: iconColor }
+        ).bindPopup(
+          '<h1>' +
+            data[i].properties.name +
+            '</h1>' +
+            '<p>成人口罩數量' +
+            data[i].properties.mask_adult +
+            '</p>'
+        )
+      );
+
       townOption += townContent;
+      str += content;
     }
   }
+  map.addLayer(markers);
   town.innerHTML = townOption;
-$(function () {
-  $('#town').focus(function () {
-    $('select option').each(function () {
-      text = $(this).text();
-      if ($('select option:contains(' + text + ')').length > 1)
-        $('select option:contains(' + text + '):gt(0)').remove();
+  pharmacy.innerHTML = str;
+
+  //刪除option重複選項
+  $(function () {
+    $('#town').focus(function () {
+      $('select option').each(function () {
+        text = $(this).text();
+        if ($('select option:contains(' + text + ')').length > 1)
+          $('select option:contains(' + text + '):gt(0)').remove();
+      });
     });
   });
-});
-  // pharmacy.innerHTML = str;
 }
 country.addEventListener('change', selectCountry);
 
-function selectTown(e){
+function selectTown(e) {
   let data = JSON.parse(xhr.responseText).features;
-  let pharmacy = document.querySelector('.pharmacy');
-  
   let select = e.target.value;
+  let pharmacy = document.querySelector('.pharmacy');
   let str = '';
   for (let i = 0; i < data.length; i++) {
-    let content = `<li>${data[i].properties.name}</li>`;
+        let content = `
+          <li class="card">
+            <h3 class="card__name">${data[i].properties.name}</h2>
+            <p class="card__add">${data[i].properties.address}</p>
+            <p class="card__tel">${data[i].properties.phone}</p>
+            <p class="card__open">${data[i].properties.note}</p>
+            <div class="card__maskNum">
+              <div class="card__maskNum__adult bgc-adult">
+                <p>成人口罩</p>
+                <p>${data[i].properties.mask_adult}</p>
+              </div>
+              <div class="card__maskNum__child bgc-child">
+                <p>兒童口罩</p>
+                <p>${data[i].properties.mask_child}</p>
+              </div>
+            </div>
+          </li>
+    `;
     if (select === data[i].properties.town) {
       str += content;
     }
@@ -192,34 +233,20 @@ function selectTown(e){
 }
 town.addEventListener('change', selectTown);
 
-// let btn = document.getElementById('btn');
-// function clickSearch(e){
-//   let search = document.getElementById('search').value;
-//   let data = JSON.parse(xhr.responseText).features;
-//   let str ='';
-//   for(let i=0; i<data.length; i++) {
-//     let content = `<li>${data[i].properties.name}</li>`;
-
-//     if( search == data[i].properties.name || 
-//         search == data[i].properties.address ||
-//         search == data[i].properties.country ||
-//         search == data[i].properties.town ||
-//         search == data[i].properties.cunli
-//         ){
-//           str += content;
-//         }
-//   }
-//   pharmacy.innerHTML = str;
-// }
-// btn.addEventListener('click', clickSearch);
-
-
-
 //預設執行
 function init() {
-  dayChinese(day);
+  changeChinese(day);
   thisDate();
   canBuy();
   currentTime();
 }
 init();
+
+// //單一marker，設定它的座標
+// L.marker([25.00144398527068, 121.51330907919525], { icon: greenIcon })
+//   //將這個座標放到對應的地圖裡
+//   .addTo(map)
+//   //針對這個marker加上html進去
+//   .bindPopup('<h1>四號公園</h1>')
+//   //預設開啟
+//   .openPopup();

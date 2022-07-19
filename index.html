@@ -39,24 +39,70 @@
   </head>
   <body>
     <div class="container">
-      <p class="today">星期<span></span></p>
-      <p id="thisDate"></p>
-      <div class="canBuy"><p>身分證末碼為<span>2,4,6,8,0</span>可購買</p></div>
-      <p id="currentTime"></p>
-      <select name="" id="country">
-        <option value="臺北市">臺北市</option>
-        <option value="新北市">新北市</option>
-      </select>
-      <select name="" id="town">
-        <option value="選擇區域">選擇區域</option>
-      </select>
-      <br>
-      <input id="search" type="text" placeholder="搜尋區域,地址,藥局">
-      <button id="btn">搜尋</button>
-      <div class="pharmacy">
-        <ul>
+      <div class="info">
+        <p class="info__today today">星期<span></span></p>
+        <div class="info__date">
+          <p id="thisDate"></p>
+          <div class="info__date__id" id="canBuy">
+            <p>身分證末碼為<span>2,4,6,8,0</span>可購買</p>
+          </div>
+        </div>
+        <div class="info__selectArea">
+          <select id="country">
+            <option value="選擇縣市">選擇縣市</option>
+            <option value="基隆市">基隆市</option>
+            <option value="臺北市">臺北市</option>
+            <option value="新北市">新北市</option>
+            <option value="桃園市">桃園市</option>
+            <option value="臺中市">臺中市</option>
+            <option value="臺南市">臺南市</option>
+            <option value="高雄市">高雄市</option>
+            <option value="新竹市">新竹市</option>
+            <option value="新竹縣">新竹縣</option>
+            <option value="苗栗縣">苗栗縣</option>
+            <option value="彰化縣">彰化縣</option>
+            <option value="南投縣">南投縣</option>
+            <option value="雲林縣">雲林縣</option>
+            <option value="嘉義市">嘉義市</option>
+            <option value="嘉義縣">嘉義縣</option>
+            <option value="屏東縣">屏東縣</option>
+            <option value="宜蘭縣">宜蘭縣</option>
+            <option value="花蓮縣">花蓮縣</option>
+            <option value="臺東縣">臺東縣</option>
+            <option value="澎湖縣">澎湖縣</option>
+            <option value="金門縣">金門縣</option>
+            <option value="連江縣">連江縣</option>
+          </select>
+          <select id="town">
+            <option value="選擇區域">選擇區域</option>
+          </select>
+        </div>
+        <div class="info__searchBar">
+          <input id="search" type="text" placeholder="搜尋區域,地址,藥局">
+          <button id="btn">搜尋</button>
+        </div>
+      </div>
+      <div class="main">
+        <ul class="main__list pharmacy">
+          <!-- <li class="card">
+            <h3 class="card__name">富山藥局</h2>
+            <p class="card__add">114台北市內湖區麗山街364巷2號</p>
+            <p class="card__tel">02 2799 6446</p>
+            <p class="card__open">營業中 9:00~21:00</p>
+            <div class="card__maskNum">
+              <div class="card__maskNum__adult bgc-adult">
+                <p>成人口罩</p>
+                <p>200</p>
+              </div>
+              <div class="card__maskNum__child bgc-child">
+                <p>兒童口罩</p>
+                <p>100</p>
+              </div>
+            </div>
+          </li> -->
         </ul>
       </div>
+      <p class="time" id="currentTime"></p>
     </div>
     <div id="map"></div>
     <!-- JS -->
